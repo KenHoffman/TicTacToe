@@ -27,6 +27,9 @@ object Main {
 
   def update(inputCell: Cell, state: GameState): Either[UserError, GameState] = {
     val matrix = state.board.matrix
+    // It's interesting to see how everyone solved this problem. Overall,
+    // while this was instructive, I think List[List[Int]] would have led 
+    // to simpler and no less "safe" code.
     val currentCellState = inputCell match {
       case Cell(0,0) => matrix.top.left
       case Cell(0,1) => matrix.top.middle
@@ -128,6 +131,8 @@ object Main {
 
   def playerHasWon(state: GameState, playerChoice: PlayerChoice): Boolean = {
     val matrix = state.board.matrix
+    // Note that if you extended your concept of a "cell", you could reuse the 
+    // same machinery to check winning lines here!
     if
       // check for 3 in a row horizontally
      ((matrix.top.left.contains(playerChoice) && matrix.top.middle.contains(playerChoice) && matrix.top.right.contains(playerChoice)) ||
@@ -148,6 +153,7 @@ object Main {
   @tailrec
   def loop(state: GameState): Unit = {
 
+    // I'd refactor this to a single function which returns something like Option[PlayerChoice] for winner
     if (playerHasWon(state, Xs))
       println("Player X has won -- game over.")
     else if (playerHasWon(state, Os))
